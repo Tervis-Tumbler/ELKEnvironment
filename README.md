@@ -1,3 +1,14 @@
+For DSC Resources to be pulled in, they must be in:
+C:\Program Files\WindowsPowerShell\DscService\Modules
+They must be in the format of ModuleName_ModuleVersion.zip, with DSCResources in the root of the zip file.
+
+Requires the following DSC resources on Pull Server:
+
+Install-PackageProvider -Name NuGet -Force
+Install-Module -Name cChoco
+Install-Module -Name xPSDesiredStateConfiguration
+
+
 # ELKEnvironment
 Assets to reproducibly setup Elasticsearch Logstash and Kibana
 
