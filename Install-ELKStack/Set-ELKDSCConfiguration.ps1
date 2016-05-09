@@ -1,14 +1,12 @@
-﻿Set-Location -Path C:\
-
-$Node = Read-Host "Enter node's FQDN [default: localhost]"
+﻿
 
 Configuration ELKStackDSC
 {
-    
+   
     param (
-        [string[]]$ComputerName = 'localhost'
+        #[string[]]$ComputerName = $env:COMPUTERNAME + "." + $env:USERDNSDOMAIN
+        [string[]] $ComputerName
     )
-
 
    Import-DscResource -ModuleName cChoco
 
@@ -26,6 +24,7 @@ Configuration ELKStackDSC
       {
         Name = "nssm"
         DependsOn = "[cChocoInstaller]installChoco"
+        Version = "2.24.0"
       }
       cChocoPackageInstaller installJava
       {
@@ -36,16 +35,20 @@ Configuration ELKStackDSC
       {
         Name = "elasticsearch"
         DependsOn = "[cChocoPackageInstaller]installJava"
+        Version = "2.3.1"
+
       }
       cChocoPackageInstaller installLogstash
       {
         Name = "logstash"
         DependsOn = "[cChocoPackageInstaller]installElasticsearch"
+        Version = "2.3.1"
       }
-      
+     
       cChocoPackageInstaller installKibana
       {
         Name = "kibana"
+        Version = "4.5.0"
         DependsOn = "[cChocoPackageInstaller]installElasticsearch"
       }
  
@@ -53,18 +56,3 @@ Configuration ELKStackDSC
 }
 
 ELKStackDSC -ComputerName $Node
-
-# Use the following for adding the configuration to the pull server:
-
-<#
-
-$guid = [guid]::NewGuid()
-$srcDir = "c:\ELKStackDSC\"
-$srcMOF = "$Node.mof"
-$destDir = "$env:ProgramFiles\windowspowershell\dscservice\configuration\"
-$destMOF = "$guid.mof"
-copy $srcDir+$srcMOF $destDir+$destMOF
-New-DscChecksum $destDir+$destMOF
-#>
-
-Start-DscConfiguration -ComputerName $Node -Wait -Verbose -Path ELKStackDSC\ -Force
