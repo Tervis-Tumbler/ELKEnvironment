@@ -13,6 +13,8 @@
         DebugMode = 'ForceModuleImport'
       }
 
+      
+
       cChocoInstaller installChoco {
         InstallDir = "c:\choco"
       }
@@ -52,9 +54,14 @@
         DependsOn = "[cChocoPackageInstaller]installElasticsearch"
       }
 
+      cChocoPackageInstaller installCarbon {
+        Name = "carbon"
+        Version = "2.2.0"
+      }
+
       Script SetJavaHomeVariable {
         GetScript = {
-            @{"JAVA_HOME"="$env:JAVA_HOME"}
+           # @{"JAVA_HOME"="$env:JAVA_HOME"}
         }
 
         SetScript = {
@@ -74,7 +81,7 @@
         }
       }
 
-        Script InstallElasticsearchService {
+      Script InstallElasticsearchServices {
         GetScript = {
             @{"Elastic Service Status"="$(Get-Service -Name elasticsearch-service-x64).Status"}
         }
@@ -91,6 +98,29 @@
             }
             else {
                 return $false
+            }
+        }
+      }
+
+      
+
+      Script SetELKServices {
+        GetScript = {
+            @{
+                "Elasticsearch"="$(Get-Service -Name elasticsearch*).Status";
+                "Logstash"="$(Get-Service -Name logstash*).Status";
+                "Kibana"="$(Get-Service -Name kibana*).Status"
+            }
+        }
+        SetScript = {
+            Get-Service -Name elastic*,logstash*,kibana* | Set-Service -StartupType Manual
+        }
+        TestScript = {
+            if (($(Get-Service -Name elastic*).StartType -ne "Manual") -or ($(Get-Service -Name logstash*).StartType -ne "Manual") -or ($(Get-Service -Name kibana*).StartType -ne "Manual"))  {
+                Return $False
+            } 
+            else {
+                Return $True
             }
         }
       }
