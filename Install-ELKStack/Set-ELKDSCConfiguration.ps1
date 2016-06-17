@@ -50,7 +50,7 @@
      
       cChocoPackageInstaller installKibana {
         Name = "kibana"
-        Version = "4.5.0"
+        Version = "4.5.1"
         DependsOn = "[cChocoPackageInstaller]installElasticsearch"
       }
 
@@ -123,8 +123,7 @@
                 Return $True
             }
         }
-      }
- 
+      } 
     }
 }
 

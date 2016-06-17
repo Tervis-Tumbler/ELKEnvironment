@@ -36,7 +36,6 @@ function Install-Carbon {
 function Set-WSManResponsePacketSize {
     $CurrentResponsePacketSize = [int ]$(Get-Item WSMan:\localhost\MaxEnvelopeSizekb ).Value
     $RequiredResponsePacketSize = 2048
-
     if ($CurrentResponsePacketSize -lt $RequiredResponsePacketSize) {
         Set-Item WSMan:\localhost\MaxEnvelopeSizekb $RequiredResponsePacketSize
     }
