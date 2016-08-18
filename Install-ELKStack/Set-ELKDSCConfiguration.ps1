@@ -45,7 +45,7 @@
       cChocoPackageInstaller installLogstash {
         Name = "logstash"
         DependsOn = "[cChocoPackageInstaller]installElasticsearch"
-        Version = "2.3.1"
+        Version = "2.3.4"
       }
      
       cChocoPackageInstaller installKibana {
@@ -87,7 +87,11 @@
         }
 
         SetScript = {
-            $JavaInstallPath = Join-Path $env:ProgramFiles Java            $JavaVersion = Get-ChildItem -Path $JavaInstallPath -Name jdk* | Select-Object -Last 1            $ServiceInstallCommand = "c:\choco\lib\elasticsearch\tools\elasticsearch-2.3.1\bin\service.bat install"            $InstallCommand = "set JAVA_HOME=$(Join-Path $JavaInstallPath $JavaVersion)&&$ServiceInstallCommand"            & cmd.exe /C $InstallCommand
+            $JavaInstallPath = Join-Path $env:ProgramFiles Java
+            $JavaVersion = Get-ChildItem -Path $JavaInstallPath -Name jdk* | Select-Object -Last 1
+            $ServiceInstallCommand = "c:\choco\lib\elasticsearch\tools\elasticsearch-2.3.1\bin\service.bat install"
+            $InstallCommand = "set JAVA_HOME=$(Join-Path $JavaInstallPath $JavaVersion)&&$ServiceInstallCommand"
+            & cmd.exe /C $InstallCommand
 
         }
 
